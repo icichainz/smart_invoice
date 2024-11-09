@@ -1,0 +1,27 @@
+{% load static %}
+{% load i18n %}
+{% load cache %}
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="icon" href="{{favicon}}" type="image/x-icon">
+    <title>{% trans "SmartInvoice | Fast Invoicing" %}</title>
+    <!-- CSS files -->
+    {% include "main/base/base_css.html" %}
+    <style>
+      @import url('https://rsms.me/inter/inter.css');
+      :root {
+      	--tblr-font-sans-serif: Inter, -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+      }
+    </style>
+  </head>
+  {% block body %}
+  {% endblock body %}
+  {% include "main/base/base_js.html" %}
+  {% block extra_js %}{% endblock extra_js %}
+</html>

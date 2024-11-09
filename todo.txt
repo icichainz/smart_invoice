@@ -1,0 +1,7 @@
+- todo : implement save as draft.
+- todo : implement priting.
+- todo : implement invoice acknowledment using tracking pixel.
+- add auto save draft  as premium features.
+- todo: implement save  as a draft
+- todo: add items reoardiring to the invoice .
+- todo: the save as draft should be automatic for every 30 seconds.
