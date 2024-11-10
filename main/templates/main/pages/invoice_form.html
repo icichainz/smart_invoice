@@ -16,190 +16,125 @@
             <div class="row g-2 align-items-center">
               <div class="col">
                 <h2 class="page-title">
-                  Invoice
+                  {% trans "Invoice" %}
                 </h2>
               </div>
               <!-- Page title actions -->
-              <div class="col-auto ms-auto d-print-none">
-                
-                <button type="button" class="btn btn-danger" onclick="javascript:window.print();">
-                    <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-contract"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 21h-2a3 3 0 0 1 -3 -3v-1h5.5" /><path d="M17 8.5v-3.5a2 2 0 1 1 2 2h-2" /><path d="M19 3h-11a3 3 0 0 0 -3 3v11" /><path d="M9 7h4" /><path d="M9 11h4" /><path d="M18.42 12.61a2.1 2.1 0 0 1 2.97 2.97l-6.39 6.42h-3v-3z" /></svg>
-                    {% trans "Save Draft" %}
-                  </button>
-
-                {# print a browser baed pdf for that. #}
-                <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"></path><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"></path><rect x="7" y="13" width="10" height="8" rx="2"></rect></svg>
-                  {% trans "Print Invoice" %}
-                </button>
-
-                 {# Save and sent #}
-                 <button type="button" class="btn btn-success" onclick="javascript:window.print();">
-                    <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-send"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14l11 -11" /><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
-                    {% trans "Send Invoice" %}
-                  </button>
-              </div>
+              {% include "main/components/form_head_actions.html" %}
 
             </div>
           </div>
         </div>
         <!-- Page body -->
-        <div class="page-body">
+        <div class="page-body" id="invoice_body">
           <div class="container-xl">
             <div class="card card-lg">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-6">
-                    <p class="h3">Company</p>
-                    <address>
-                      Street Address<br>
-                      State, City<br>
-                      Region, Postal Code<br>
-                      ltd@example.com
-                    </address>
-                  </div>
-                  <div class="col-6 text-end" >
-                    <p class="h3">Client</p>
-                    <address>
-                      <span data-editable="true" id="client_street">Street Address</span><br>
-                     <span data-editable="true" id="client_state_city"> State, City</span><br>
-                      <span data-editable="true" id="client_regional_postal_code">Region, Postal Code</span><br>
-                      <span data-editable="true">ctr@example.com</span>
-                    </address>
-                  </div>
-                  <div class="col-12 my-5" id="invoice-num-id">
-                    <h1>Invoice INV/001/15</h1>
-                  </div>
-                </div>
-                <table class="table table-transparent table-responsive">
-                  <thead>
-                    <tr>
-                      <th class="text-center" style="width: 1%"></th>
-                      <th>Product</th>
-                      <th class="text-center" style="width: 1%">Qnt</th>
-                      <th class="text-end" style="width: 1%">Unit</th>
-                      <th class="text-end" style="width: 1%">Amount</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody><tr>
-                    <td class="text-center">1</td>
-                    <td>
-                      <p class="strong mb-1">Logo Creation</p>
-                      <div class="text-muted">Logo and business cards design</div>
-                    </td>
-                    <td class="text-center">
-                      1
-                    </td>
-                    <td class="text-end">$1.800,00</td>
-                    <td class="text-end">$1.800,00</td>
-                    <td class="text-end">
-                        <span class="dropdown">
-                          <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            
-                            <a class="dropdown-item" href="#">
-                             {% trans "Edit" %}
-                            </a>
-                            <a class="dropdown-item" href="#">
-                               {% trans "Delete" %}
-                            </a>
-							<a class="dropdown-item" href="">
-								{% trans "Add invoice item" %}
-							</a>
-                          </div>
-                        </span>
-                      </td>
-                  </tr>
-                  <tr>
-                    <td class="text-center">2</td>
-                    <td>
-                      <p class="strong mb-1">Online Store Design &amp; Development</p>
-                      <div class="text-muted">Design/Development for all popular modern browsers</div>
-                    </td>
-                    <td class="text-center">
-                      1
-                    </td>
-                    <td class="text-end">$20.000,00</td>
-                    <td class="text-end">$20.000,00</td>
-                  </tr>
-                  <tr>
-                    <td class="text-center">3</td>
-                    <td>
-                      <p class="strong mb-1">App Design</p>
-                      <div class="text-muted">Promotional mobile application</div>
-                    </td>
-                    <td class="text-center">
-                      1
-                    </td>
-                    <td class="text-end">$3.200,00</td>
-                    <td class="text-end">$3.200,00</td>
-                  </tr>
-                  <tr>
-                    <td colspan="4" class="strong text-end">Subtotal</td>
-                    <td class="text-end">$25.000,00</td>
-                  </tr>
-                  <tr>
-                    <td colspan="4" class="strong text-end">Vat Rate</td>
-                    <td class="text-end">20%</td>
-                  </tr>
-                  <tr>
-                    <td colspan="4" class="strong text-end">Vat Due</td>
-                    <td class="text-end">$5.000,00</td>
-                  </tr>
-                  <tr>
-                    <td colspan="4" class="font-weight-bold text-uppercase text-end">Total Due</td>
-                    <td class="font-weight-bold text-end">$30.000,00</td>
-                  </tr>
-                </tbody></table>
-                <p class="text-muted text-center mt-5">Thank you very much for doing business with us. We look forward to working with
-                  you again!</p>
-              </div>
+              <form method="post">
+				{% csrf_token %}
+				<div class="card-body">
+					<div class="row">
+					  <div class="col-6">
+						<p class="h3" data-editable="true">Company</p>
+						<address>
+						  <span data-editable="true">Street Address</span></br>
+						  <span data-editable="true">State, City</span><br/>
+						  <span data-editable="true"> Region, Postal Code</span><br/>
+						  <span data-editable="true"> ltd@example.com</span><br/>
+						</address>
+					  </div>
+					  <div class="col-6 text-end" >
+						<p class="h3" data-editable="true">Client</p>
+						<address>
+						  <span data-editable="true" id="client_name">{% trans "Client name" %}</span><br>
+						 <span data-editable="true" id="client_phone">{% trans "+22870515263" %}</span><br>
+						  <span data-editable="true" id="client_email">{% trans "mail@client.com" %}</span><br>
+						</address>
+					  </div>
+					  <div class="col-12 my-5" id="invoice-num-id">
+						<h1>Invoice INV/001/15</h1>
+					  </div>
+					</div>
+					<table class="table table-transparent table-responsive">
+					  <thead>
+						<tr>
+						  <th class="text-center" style="width: 1%"></th>
+						  <th>Product</th>
+						  <th class="text-center" style="width: 1%">Qty</th>
+						  <th class="text-end" style="width: 1%">Unit</th>
+						  <th class="text-end" style="width: 1%">Amount</th>
+						  <th class="d-print-none"></th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr>
+						<td class="text-center">1</td>
+						<td>
+						  <p class="strong mb-1">Logo Creation</p>
+						  <div class="text-muted">Logo and business cards design</div>
+						</td>
+						<td class="text-center">
+						  1
+						</td>
+						<td class="text-end">$1.800,00</td>
+						<td class="text-end">$1.800,00</td>
+						<td class="text-end d-print-none">
+							<span class="dropdown">
+							  <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
+							  <div class="dropdown-menu dropdown-menu-end">
+								
+								<a class="dropdown-item" href="#">
+								 {% trans "Edit" %}
+								</a>
+								<a class="dropdown-item" href="#">
+								   {% trans "Delete" %}
+								</a>
+								<a class="dropdown-item" href="">
+									{% trans "Add invoice item" %}
+								</a>
+							  </div>
+							</span>
+						  </td>
+					  </tr>
+					  <tr id="add_item_btn" class="d-print-none">
+						<td colspan="4" class="text-start">
+							<button type="button" class="btn btn-primary-outlined" 
+							data-bs-toggle="modal"  data-bs-target="#add_item_id" >
+								<!-- Download SVG icon from http://tabler-icons.io/i/printer -->
+								<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+								{% trans "Add Item" %}
+							  </button>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="4" class="strong text-end">Subtotal</td>
+						<td class="text-end">$25.000,00</td>
+					  </tr>
+					  <tr>
+						<td colspan="4" class="strong text-end">Vat Rate</td>
+						<td class="text-end">20%</td>
+					  </tr>
+					  <tr>
+						<td colspan="4" class="strong text-end">Vat Due</td>
+						<td class="text-end">$5.000,00</td>
+					  </tr>
+					  <tr>
+						<td colspan="4" class="font-weight-bold text-uppercase text-end">Total Due</td>
+						<td class="font-weight-bold text-end">$30.000,00</td>
+					  </tr>
+					</tbody></table>
+					<p class="text-muted text-center mt-5">Thank you very much for doing business with us. We look forward to working with
+					  you again!</p>
+				  </div>
+			  </form>
             </div>
           </div>
         </div>
-        <footer class="footer footer-transparent d-print-none">
-          <div class="container-xl">
-            <div class="row text-center align-items-center flex-row-reverse">
-              <div class="col-lg-auto ms-lg-auto">
-                <ul class="list-inline list-inline-dots mb-0">
-                  <li class="list-inline-item"><a href="./docs/" class="link-secondary">Documentation</a></li>
-                  <li class="list-inline-item"><a href="./license.html" class="link-secondary">License</a></li>
-                  <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
-                  <li class="list-inline-item">
-                    <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
-                      <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg>
-                      Sponsor
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-                <ul class="list-inline list-inline-dots mb-0">
-                  <li class="list-inline-item">
-                    Copyright © 2022
-                    <a href="." class="link-secondary">Tabler</a>.
-                    All rights reserved.
-                  </li>
-                  <li class="list-inline-item">
-                    <a href="./changelog.html" class="link-secondary" rel="noopener">
-                      v1.0.0-beta16
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </footer>
+        {% include "main/base/footer.html" %}
       </div>
       
     </div>
+	{% include "main/components/add_item_modal.html" %}
 	
-
     <script>
       // @formatter:off
       document.addEventListener("DOMContentLoaded", function () {

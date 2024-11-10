@@ -1,1 +1,10 @@
-the is the smart index page.
+<h2>Create Invoice</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {{ formset.management_form }}
+  {% for form in formset.forms %}
+    {{ form.as_p }}
+  {% endfor %}
+  <button type="submit">Create Invoice</button>
+</form>

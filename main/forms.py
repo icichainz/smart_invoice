@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Invoice, InvoiceItem
 
 class InvoiceForm(forms.ModelForm):
@@ -11,8 +12,12 @@ class InvoiceItemForm(forms.ModelForm):
         model = InvoiceItem
         fields = ['description', 'amount', 'quantity']
 
-class InvoiceItemFormSet(forms.BaseFormSet):
-    def clean(self):
-        super().clean()
-        if not self.forms:
-            raise forms.ValidationError("At least one item is required.")
+InvoiceItemFormSet = inlineformset_factory(
+parent_model=Invoice,
+model=InvoiceItem,
+form=InvoiceItemForm,
+extra=2,
+min_num=1,
+validate_min= True ,
+can_delete= True ,
+)

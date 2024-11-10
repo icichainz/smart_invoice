@@ -1,40 +1,4 @@
 document.addEventListener('DOMContentLoaded',()=>{
-    const editableInvoiceid = document.getElementById('invoice-num-id');
-    let editableInvoiceIdInpput;
-
-    const editableInvoiceClientEls= document.querySelectorAll('[data-editable="true"]') ;
-
-    // hanle edition features related to invoice number.
-    editableInvoiceid.addEventListener('click',(e)=>{
-        console.log('Invoice number clicked') ;
-        if (!editableInvoiceIdInpput) {
-            editableInvoiceIdInpput = document.createElement('input');
-            editableInvoiceIdInpput.type = 'text';
-            editableInvoiceIdInpput.value = editableInvoiceid.textContent;
-            editableInvoiceIdInpput.className = 'input-edit';
-
-
-            // Replace the div with the input field
-           editableInvoiceid.innerHTML = '';
-           editableInvoiceid.appendChild(editableInvoiceIdInpput);
-            editableInvoiceIdInpput.focus();
-
-            // Handle focus out
-            editableInvoiceIdInpput.addEventListener('blur', () => {
-               editableInvoiceid.textContent = editableInvoiceIdInpput.value;
-                editableInvoiceIdInpput = null; // Clear editableInvoiceIdInpput reference
-            });
-
-            // Handle Enter key
-            editableInvoiceIdInpput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                   editableInvoiceid.textContent = editableInvoiceIdInpput.value;
-                    editableInvoiceIdInpput = null; // Clear editableInvoiceIdInpput reference
-                }
-            });
-        }
-    });
-
 
     // handle client informations elements change.
     const editableElements = document.querySelectorAll('[data-editable="true"]');
@@ -64,11 +28,23 @@ document.addEventListener('DOMContentLoaded',()=>{
         });
     });
 
-    function saveChanges(value, element) {
-        // Update the element's text content
+    function saveChanges(value, element ) {
         element.textContent = value;
+        // Update the element's text content
+       if (element.textContent.length === 0) {
+          const nextElementSibling = element.nextElementSibling ;
+          if (nextElementSibling && nextElementSibling.tagName === 'BR') {
+            nextElementSibling.remove() ;
+          }
+          element.remove();
+          return ;
+       }
+       
 
     }
+
+
+
 
 
 
