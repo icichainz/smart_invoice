@@ -54,74 +54,8 @@
 						<h1>Invoice INV/001/15</h1>
 					  </div>
 					</div>
-					<table class="table table-transparent table-responsive">
-					  <thead>
-						<tr>
-						  <th class="text-center" style="width: 1%"></th>
-						  <th>Product</th>
-						  <th class="text-center" style="width: 1%">Qty</th>
-						  <th class="text-end" style="width: 1%">Unit</th>
-						  <th class="text-end" style="width: 1%">Amount</th>
-						  <th class="d-print-none"></th>
-						</tr>
-					  </thead>
-					  <tbody>
-						<tr>
-						<td class="text-center">1</td>
-						<td>
-						  <p class="strong mb-1">Logo Creation</p>
-						  <div class="text-muted">Logo and business cards design</div>
-						</td>
-						<td class="text-center">
-						  1
-						</td>
-						<td class="text-end">$1.800,00</td>
-						<td class="text-end">$1.800,00</td>
-						<td class="text-end d-print-none">
-							<span class="dropdown">
-							  <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-							  <div class="dropdown-menu dropdown-menu-end">
-								
-								<a class="dropdown-item" href="#">
-								 {% trans "Edit" %}
-								</a>
-								<a class="dropdown-item" href="#">
-								   {% trans "Delete" %}
-								</a>
-								<a class="dropdown-item" href="">
-									{% trans "Add invoice item" %}
-								</a>
-							  </div>
-							</span>
-						  </td>
-					  </tr>
-					  <tr id="add_item_btn" class="d-print-none">
-						<td colspan="4" class="text-start">
-							<button type="button" class="btn btn-primary-outlined" 
-							data-bs-toggle="modal"  data-bs-target="#add_item_id" >
-								<!-- Download SVG icon from http://tabler-icons.io/i/printer -->
-								<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-								{% trans "Add Item" %}
-							  </button>
-						</td>
-					  </tr>
-					  <tr>
-						<td colspan="4" class="strong text-end">Subtotal</td>
-						<td class="text-end">$25.000,00</td>
-					  </tr>
-					  <tr>
-						<td colspan="4" class="strong text-end">Vat Rate</td>
-						<td class="text-end">20%</td>
-					  </tr>
-					  <tr>
-						<td colspan="4" class="strong text-end">Vat Due</td>
-						<td class="text-end">$5.000,00</td>
-					  </tr>
-					  <tr>
-						<td colspan="4" class="font-weight-bold text-uppercase text-end">Total Due</td>
-						<td class="font-weight-bold text-end">$30.000,00</td>
-					  </tr>
-					</tbody></table>
+					{% include "main/components/invoice_table.html" %}
+				</table>
 					<p class="text-muted text-center mt-5">Thank you very much for doing business with us. We look forward to working with
 					  you again!</p>
 				  </div>

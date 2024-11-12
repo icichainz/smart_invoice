@@ -1,0 +1,75 @@
+{% load static %}
+{% load i18n %}
+<form 
+    hx-post="{% url "add_invoice_item" %}"
+    hx-target="#inv-table"
+    hx-on::after-request="if(event.detail.successful) { bootstrap.Modal.getInstance(document.getElementById('add_item_id')).hide(); }"
+>
+    {% csrf_token %}
+    <input type="hidden" name="invoice" value="{{invoice_id}}" required>
+
+    <div class="mb-3">
+        <label for="f_title" class="form-label">{% trans "Title" %}*</label>
+        <input type="text" 
+               class="form-control" 
+               id="f_title" 
+               name='title' 
+               placeholder="{% trans 'Enter the item name or service provided' %}" 
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label for="f_desc" class="form-label">{% trans "Descriptions" %}*</label>
+        <textarea class="form-control" 
+                  id="f_desc" 
+                  name="description" 
+                  rows="3" 
+                  placeholder="{% trans 'Describe the details of your product or service here...' %}"
+                  required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="f_amount" class="form-label">{% trans "Amount" %}*</label>
+        <input type="number" 
+               step="0.01" 
+               min="0"
+               max="1000000000"
+               class="form-control" 
+               id="f_amount"
+               name="amount" 
+               placeholder="1000" 
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label for="f_qty" class="form-label">{% trans "Quantity" %}*</label>
+        <input type="number" 
+               class="form-control" 
+               id="f_qty"
+               name="quantity" 
+               min="0"
+               max="1000000000"
+               placeholder="1.0" 
+               required>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Close" %}</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="htmx-indicator spinner-border spinner-border-sm me-1" role="status">
+                <span class="visually-hidden">{% trans "Loading..." %}</span>
+            </span>
+            <span>{% trans "Save changes" %}</span>
+        </button>
+    </div>
+</form>
+
+<style>
+    .htmx-request .htmx-indicator {
+        display: inline-block;
+    }
+    .htmx-indicator {
+        display: none;
+    }
+</style>
+

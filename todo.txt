@@ -1,11 +1,12 @@
-- todo : implement save as draft.
+- todo : implement save as draft .
 - todo : implement priting.
 - todo : implement invoice acknowledment using tracking pixel[premium].
-- add auto save draft  as premium features.
+- todo: implement auto save draft [premium].
 - todo: implement save  as a draft [premium]
 - todo: add items reoardiring to the invoice [premium] .
 - todo: the save as draft should be automatic for every 30 seconds.[premium]
 - todo : implement the oriana branch to use the form wizard.
+- todo: implement leaving confirmation when the user try to leave or when the user trie to reload.
 
 the v1 : will be called milkhead.
 the v2:  will be called oriana.

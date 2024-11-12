@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+<table class="table table-transparent table-responsive" 
+id="inv-table">
+    <thead>
+      <tr>
+        <th class="text-center" style="width: 1%"></th>
+        <th>{% trans "Product" %}</th>
+        <th class="text-center" style="width: 1%">{% trans "Qty" %}</th>
+        <th class="text-end" style="width: 1%">{% trans "Unit" %}</th>
+        <th class="text-end" style="width: 1%">{% trans "Amount" %}</th>
+        <th class="d-print-none"></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% include "main/components/table_item.html" %}
+    <tr id="add_item_btn" class="d-print-none">
+      <td colspan="4" class="text-start">
+          <button type="button" class="btn btn-primary-outlined" 
+          data-bs-toggle="modal"  data-bs-target="#add_item_id" >
+              <!-- Download SVG icon from http://tabler-icons.io/i/printer -->
+              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+              {% trans "Add Item" %}
+            </button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" class="strong text-end">{% trans "Subtotal" %}</td>
+      <td class="text-end">{{invoice.total_amount}}</td>
+    </tr>
+    {% if invoice.vat_rate %}
+    <tr>
+      <td colspan="4" class="strong text-end">{% trans "Vat Rate" %}</td>
+      <td class="text-end">{{invoice.vat_rate}}%</td>
+    </tr>
+    <tr>
+      <td colspan="4" class="strong text-end">{% trans "Vat Value" %}</td>
+      <td class="text-end">{{invoice.vat_rate_amount}}</td>
+    </tr>
+    {% endif %}
+    
+    <tr>
+      <td colspan="4" class="font-weight-bold text-uppercase text-end">{% trans "Total Due" %}</td>
+      <td class="font-weight-bold text-end">{{invoice.total_amount_final}}</td>
+    </tr>
+  </tbody>
