@@ -22,11 +22,14 @@
             
             <a class="dropdown-item" 
                 data-bs-toggle="modal" 
-                data-bs-target="#modal-{{ item.id }}"
+                data-bs-target="#modal-{{item.id}}"
             >
              {% trans "Edit" %}
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item"
+            dat-bs-toggle="modal"
+            data-bs-target="#modal-danger" 
+            >
                {% trans "Delete" %}
             </a>
 
@@ -35,27 +38,10 @@
       </td>
   </tr>
 <!-- edit modal -->
-  <div class="modal fade" id="modal-{{item.id}}" tabindex="-1" aria-labelledby="modallabel-{{item.id}}" 
-  aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" 
-            id="exampleModalLabel">
-            {% trans "Edit Invoice Item" %}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div 
-           class="modal-body"
-           id="modal-content-{{item.id}}"
-           hx-trigger="shown.bs.modal from:#modal-{{item.id}}"
-           hx-target="this" 
-           hx-swap="innerHTML" 
-           hx-get="{% url 'get_item_edit' item.id %}"   
-           >
-        </div>
-      </div>
-  </div> 
-<!-- cancel modal -->
+{% include "main/components/modals/edit_item_modal.html" %}
+
+<!-- delete  modal -->
+ {% include "main/components/modals/delete_item_modal.html" %}
+
 
 {% endfor %}

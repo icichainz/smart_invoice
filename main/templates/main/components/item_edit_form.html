@@ -1,9 +1,9 @@
 {% load static %}
 {% load i18n %}
 <form 
-    hx-post="{% url "add_invoice_item" %}"
+    hx-post="{% url "edit_invoice_item" item.id%}"
     hx-target="#inv-table"
-    hx-on::after-request="if(event.detail.successful) { bootstrap.Modal.getInstance(document.getElementById('add_item_id')).hide(); }"
+    hx-on::after-request="if(event.detail.successful) { bootstrap.Modal.getInstance(document.getElementById('modal-{{item.id}}')).hide(); }"
 >
     {% csrf_token %}
     <input type="hidden" name="invoice" value="{{item.invoice.id}}" required>
@@ -25,15 +25,14 @@
                   id="f_desc" 
                   name="description" 
                   rows="3"
-                  value="{{item.description}}" 
                   placeholder="{% trans 'Describe the details of your product or service here...' %}"
-                  required></textarea>
+                  required>
+                  {{item.description}}</textarea>
     </div>
 
     <div class="mb-3">
         <label for="f_amount" class="form-label">{% trans "Amount" %}*</label>
         <input type="number" 
-               step="0.01" 
                min="0"
                max="1000000000"
                class="form-control" 

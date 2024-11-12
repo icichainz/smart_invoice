@@ -13,7 +13,9 @@ id="inv-table">
       </tr>
     </thead>
     <tbody>
+
     {% include "main/components/table_item.html" %}
+    
     <tr id="add_item_btn" class="d-print-none">
       <td colspan="4" class="text-start">
           <button type="button" class="btn btn-primary-outlined" 
@@ -24,15 +26,18 @@ id="inv-table">
             </button>
       </td>
     </tr>
+
     <tr>
       <td colspan="4" class="strong text-end">{% trans "Subtotal" %}</td>
       <td class="text-end">{{invoice.total_amount}}</td>
     </tr>
+
     {% if invoice.vat_rate %}
     <tr>
       <td colspan="4" class="strong text-end">{% trans "Vat Rate" %}</td>
       <td class="text-end">{{invoice.vat_rate}}%</td>
     </tr>
+
     <tr>
       <td colspan="4" class="strong text-end">{% trans "Vat Value" %}</td>
       <td class="text-end">{{invoice.vat_rate_amount}}</td>
@@ -44,3 +49,4 @@ id="inv-table">
       <td class="font-weight-bold text-end">{{invoice.total_amount_final}}</td>
     </tr>
   </tbody>
+</table>

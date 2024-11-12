@@ -91,15 +91,19 @@ def update_client_info(request):
         client = Client.objects.filter(id=client_id)
     pass
 
-
+@login_required
 def create_invoice(request):
-    inv_seed = Invoice.objects.create(user=request.user)
-    print(f"created invoice : { inv_seed.id}")
+    try:
+        last_invoice = Invoice.objects.filter(is_closed=False).latest('id')
+        invoice_to_use = last_invoice
+    except Invoice.DoesNotExist:
+        invoice_to_use = Invoice.objects.create(user=request.user)
+    print(f'Invoice to use id : {invoice_to_use.id}')
     return render(
         request=request,
         template_name="main/pages/invoice_form.html",
         context={
-            "invoice": inv_seed,
+            "invoice": invoice_to_use,
         },
     )
 

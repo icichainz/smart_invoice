@@ -34,7 +34,7 @@
 				<div class="card-body">
 					<div class="row">
 					  <div class="col-6">
-						<p class="h3" data-editable="true">Company</p>
+						<p class="h3" data-editable="true" data-hidable="true">Company</p>
 						<address>
 						  <span data-editable="true">Street Address</span></br>
 						  <span data-editable="true">State, City</span><br/>
@@ -55,9 +55,10 @@
 					  </div>
 					</div>
 					{% include "main/components/invoice_table.html" %}
-				</table>
-					<p class="text-muted text-center mt-5">Thank you very much for doing business with us. We look forward to working with
-					  you again!</p>
+					<p class="text-muted text-center mt-5">
+						{% trans "Thank you very much for doing business with us. We look forward to working with
+					  you again!" %}
+					</p>
 				  </div>
 			  </form>
             </div>
@@ -65,9 +66,9 @@
         </div>
         {% include "main/base/footer.html" %}
       </div>
-      
+      {% include "main/components/add_item_modal.html" %}
     </div>
-	{% include "main/components/add_item_modal.html" %}
+	
 	
     <script>
       // @formatter:off

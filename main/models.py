@@ -23,8 +23,8 @@ class Invoice(models.Model):
         ("sent", "Sent"),
         ("not sent", "Not Sent"),
     )
-    is_invoice_ongoing = models.BooleanField(
-        default=True,
+    is_closed = models.BooleanField(
+        default=False,
     )
     client = models.ForeignKey(
         Client,

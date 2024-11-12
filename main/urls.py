@@ -33,7 +33,7 @@ urlpatterns = [
         name="add_invoice_item",
     ),
     path(
-        "items/<int:id>/edit/",
+        "items/<int:item_id>/edit/",
         update_invoice_item,
         name="edit_invoice_item",
     ),
