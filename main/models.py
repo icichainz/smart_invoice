@@ -1,11 +1,17 @@
 import uuid
+from decimal import Decimal, ROUND_HALF_UP
 
-from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class Client(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="clients",
+        null=True,
+    )
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=15, blank=True)
@@ -84,17 +90,17 @@ class Invoice(models.Model):
 
     def save(self, *args, **kwargs):
 
-        # save  and udate
-        if self.pk and self.items.exists():
-
-            self.total_amount = sum(item.total_amount for item in self.items.all())
-
-            if self.vat_rate:
-                self.vat_rate_amount = self.total_amount * (self.vat_rate / 100)
-                self.total_amount_final = self.total_amount + self.vat_rate_amount
-
-            else:
-                self.total_amount_final = self.total_amount
+        # Recalculate totals from active items only (soft-deleted items are excluded).
+        if self.pk:
+            active_items = self.items.filter(is_active=True)
+            self.total_amount = sum(
+                (item.total_amount or Decimal("0") for item in active_items),
+                Decimal("0"),
+            )
+            self.vat_rate_amount = (
+                self.total_amount * Decimal(self.vat_rate) / Decimal("100")
+            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+            self.total_amount_final = self.total_amount + self.vat_rate_amount
 
         return super().save(*args, **kwargs)
 

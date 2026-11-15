@@ -8,5 +8,10 @@ class InvoiceItemInline(admin.TabularInline):
 class InvoiceAdmin(admin.ModelAdmin):
     inlines = [InvoiceItemInline]
 
-admin.site.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "user")
+    list_filter = ("user",)
+    search_fields = ("name", "email")
+
+admin.site.register(Client, ClientAdmin)
 admin.site.register(Invoice, InvoiceAdmin)

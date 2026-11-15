@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('main.urls')),
+    path('api/', include('main.api_urls')),  # API routes
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 

@@ -2,3 +2,22 @@ todo.txt
 user.txt
 db.sqlite3
 
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Environment / secrets
+.env
+!.env.example
+
+# OS / editor
+.DS_Store
+.claude/settings.local.json
+
+# Django generated
+staticfiles/
+media/
+
+# Misc
+.chatlink
