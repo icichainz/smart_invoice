@@ -199,6 +199,17 @@ else:
         },
     }
 
+# Sender address for outgoing mail (e.g. invoices emailed to clients).
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DJANGO_DEFAULT_FROM_EMAIL", "Smart Invoice <noreply@localhost>"
+)
+
+# Public URL of the React frontend; used to build links in emails
+# (e.g. the invoice share page at <FRONTEND_URL>/share/<id>).
+FRONTEND_URL = os.environ.get(
+    "DJANGO_FRONTEND_URL", "http://localhost:3000"
+).rstrip("/")
+
 # Django REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -208,7 +219,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'main.pagination.StandardPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',

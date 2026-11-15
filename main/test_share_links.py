@@ -113,7 +113,7 @@ class ShareLinkTests(TestCase):
         self.assertEqual(response["Content-Type"], "application/pdf")
         self.assertEqual(
             response["Content-Disposition"],
-            f'attachment; filename="invoice_{self.invoice.id}.pdf"',
+            f'attachment; filename="{self.invoice.number}.pdf"',
         )
         self.assertTrue(response.content.startswith(b"%PDF"))
 

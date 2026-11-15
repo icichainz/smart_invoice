@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Client, Invoice, InvoiceItem
+from .models import BusinessProfile, Client, Invoice, InvoiceItem
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -70,14 +70,14 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = [
-            'id', 'client', 'client_name', 'user', 'user_name',
+            'id', 'number', 'client', 'client_name', 'user', 'user_name',
             'created_at', 'due_date', 'vat_rate', 'total_amount',
             'total_amount_final', 'vat_rate_amount', 'status',
-            'save_as_draft', 'is_closed', 'share_link_id', 'sent', 'items'
+            'save_as_draft', 'is_closed', 'share_link_id', 'sent', 'sent_at', 'items'
         ]
         read_only_fields = [
-            'id', 'created_at', 'total_amount', 'total_amount_final', 
-            'vat_rate_amount', 'share_link_id', 'user', 'client_name', 'user_name'
+            'id', 'number', 'created_at', 'total_amount', 'total_amount_final', 
+            'vat_rate_amount', 'share_link_id', 'sent_at', 'user', 'client_name', 'user_name'
         ]
 
     def validate_client(self, value):
@@ -87,6 +87,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if value < 0 or value > 100:
             raise serializers.ValidationError("VAT rate must be between 0 and 100.")
         return value
+
+
+class SendInvoiceEmailSerializer(serializers.Serializer):
+    """Optional note included in the email sent to the client."""
+    message = serializers.CharField(
+        max_length=2000, allow_blank=True, default=''
+    )
 
 
 class InvoiceCreateSerializer(serializers.ModelSerializer):
@@ -194,7 +201,7 @@ class PublicInvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = [
-            'id', 'created_at', 'due_date', 'status', 'vat_rate',
+            'id', 'number', 'created_at', 'due_date', 'status', 'vat_rate',
             'total_amount', 'vat_rate_amount', 'total_amount_final',
             'client_name', 'client_email', 'items'
         ]
@@ -203,3 +210,14 @@ class PublicInvoiceSerializer(serializers.ModelSerializer):
     def get_items(self, obj):
         active_items = obj.items.filter(is_active=True).order_by('id')
         return PublicInvoiceItemSerializer(active_items, many=True).data
+
+
+class BusinessProfileSerializer(serializers.ModelSerializer):
+    """The current user's sender details, as printed on their invoices."""
+
+    class Meta:
+        model = BusinessProfile
+        fields = [
+            'business_name', 'address', 'email', 'phone', 'tax_id',
+            'payment_instructions', 'footer_note'
+        ]

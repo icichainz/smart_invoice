@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { Plus, Edit, MoreHorizontal, Share2 } from 'lucide-react';
+import { Plus, Edit, MoreHorizontal, Share2, Mail } from 'lucide-react';
 import { invoiceApi } from '../services/api';
 import { Invoice } from '../types';
 import { formatDate, formatCurrency, getErrorMessage } from '../utils';
@@ -15,6 +15,7 @@ const InvoiceList: React.FC = () => {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [sharingId, setSharingId] = useState<number | null>(null);
+  const [sendingId, setSendingId] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +71,35 @@ const InvoiceList: React.FC = () => {
     }
   };
 
+  const sendDisabledReason = (invoice: Invoice): string | null => {
+    if (invoice.save_as_draft) return 'Draft invoices cannot be sent';
+    if (!invoice.client) return 'Add a client to this invoice before sending it';
+    return null;
+  };
+
+  const handleSendEmail = async (invoice: Invoice) => {
+    const confirmed = window.confirm(
+      `Email invoice ${invoice.number} to ${invoice.client_name}?`
+    );
+    if (!confirmed) return;
+
+    setError('');
+    setNotice('');
+    try {
+      setSendingId(invoice.id);
+      const response = await invoiceApi.sendEmail(invoice.id);
+      const updated = response.data;
+      if (updated) {
+        setInvoices((prev) => prev.map((inv) => (inv.id === updated.id ? updated : inv)));
+      }
+      setNotice(response.message || `Invoice ${invoice.number} sent.`);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setSendingId(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-64">
@@ -120,7 +150,7 @@ const InvoiceList: React.FC = () => {
             <TableBody>
               {invoices.map((invoice) => (
                 <TableRow key={invoice.id}>
-                  <TableCell>#{invoice.id}</TableCell>
+                  <TableCell>{invoice.number}</TableCell>
                   <TableCell>{invoice.client_name || 'No Client'}</TableCell>
                   <TableCell>{formatDate(invoice.created_at)}</TableCell>
                   <TableCell>{formatDate(invoice.due_date)}</TableCell>
@@ -128,6 +158,11 @@ const InvoiceList: React.FC = () => {
                     <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800">
                       {invoice.status}
                     </span>
+                    {invoice.sent === 'sent' && (
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {invoice.sent_at ? `Sent ${formatDate(invoice.sent_at)}` : 'Sent'}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>{formatCurrency(invoice.total_amount_final)}</TableCell>
                   <TableCell>
@@ -143,6 +178,16 @@ const InvoiceList: React.FC = () => {
                       aria-label="Share"
                     >
                       <Share2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleSendEmail(invoice)}
+                      disabled={sendDisabledReason(invoice) !== null || sendingId === invoice.id}
+                      title={sendDisabledReason(invoice) ?? 'Email invoice to client'}
+                      aria-label="Send"
+                    >
+                      <Mail className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>

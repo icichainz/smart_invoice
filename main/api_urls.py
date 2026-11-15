@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
 from .api_views import (
     ClientViewSet, InvoiceViewSet, InvoiceItemViewSet,
-    PublicInvoiceView, PublicInvoicePdfView
+    PublicInvoiceView, PublicInvoicePdfView, BusinessProfileView
 )
 
 # Create a router and register our viewsets with it.
@@ -17,6 +17,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/login/', obtain_auth_token, name='api_token_auth'),
     path('auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('profile/', BusinessProfileView.as_view(), name='business_profile'),
     # Public, unauthenticated share-link endpoints
     path('public/invoices/<uuid:share_link_id>/', PublicInvoiceView.as_view(), name='public_invoice'),
     path('public/invoices/<uuid:share_link_id>/pdf/', PublicInvoicePdfView.as_view(), name='public_invoice_pdf'),

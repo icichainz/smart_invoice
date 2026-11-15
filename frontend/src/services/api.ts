@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import {
+  BusinessProfile,
   Client,
   ClientCreate,
   Invoice,
@@ -59,11 +60,35 @@ export const authApi = {
   },
 };
 
+// Business profile API (the current user's sender details)
+export const profileApi = {
+  get: async (): Promise<BusinessProfile> => {
+    const response: AxiosResponse<BusinessProfile> = await api.get('/profile/');
+    return response.data;
+  },
+
+  update: async (profile: Partial<BusinessProfile>): Promise<BusinessProfile> => {
+    const response: AxiosResponse<BusinessProfile> = await api.patch('/profile/', profile);
+    return response.data;
+  },
+};
+
 // Client API
 export const clientApi = {
+  // Fetches every page so callers (e.g. the invoice client picker) see all clients.
   list: async (): Promise<Client[]> => {
-    const response: AxiosResponse<PaginatedResponse<Client>> = await api.get('/clients/');
-    return response.data.results;
+    const clients: Client[] = [];
+    let page = 1;
+    let hasNext = true;
+    while (hasNext) {
+      const response: AxiosResponse<PaginatedResponse<Client>> = await api.get('/clients/', {
+        params: { page, page_size: 100 },
+      });
+      clients.push(...response.data.results);
+      hasNext = Boolean(response.data.next);
+      page += 1;
+    }
+    return clients;
   },
   
   create: async (client: ClientCreate): Promise<Client> => {
@@ -134,6 +159,14 @@ export const invoiceApi = {
   
   revokeShareLink: async (id: number): Promise<ApiResponse<Invoice>> => {
     const response: AxiosResponse<ApiResponse<Invoice>> = await api.post(`/invoices/${id}/revoke_share_link/`);
+    return response.data;
+  },
+  
+  sendEmail: async (id: number, message?: string): Promise<ApiResponse<Invoice>> => {
+    const response: AxiosResponse<ApiResponse<Invoice>> = await api.post(
+      `/invoices/${id}/send_email/`,
+      message ? { message } : {}
+    );
     return response.data;
   },
   

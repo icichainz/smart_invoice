@@ -18,6 +18,8 @@ const InvoiceForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [clients, setClients] = useState<Client[]>([]);
+  const [clientsLoaded, setClientsLoaded] = useState(false);
+  const [invoiceNumber, setInvoiceNumber] = useState('');
   
   // Form state
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -33,10 +35,10 @@ const InvoiceForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isEditing && id && clients.length > 0) {
+    if (isEditing && id && clientsLoaded) {
       loadInvoice(parseInt(id));
     }
-  }, [isEditing, id, clients]);
+  }, [isEditing, id, clientsLoaded]);
 
   const loadClients = async () => {
     try {
@@ -44,6 +46,8 @@ const InvoiceForm: React.FC = () => {
       setClients(clientList);
     } catch (err) {
       setError(getErrorMessage(err));
+    } finally {
+      setClientsLoaded(true);
     }
   };
 
@@ -51,6 +55,7 @@ const InvoiceForm: React.FC = () => {
     try {
       setLoading(true);
       const invoiceData = await invoiceApi.get(invoiceId);
+      setInvoiceNumber(invoiceData.number);
       
       const client = clients.find(c => c.id === invoiceData.client);
       setSelectedClient(client || null);
@@ -153,7 +158,7 @@ const InvoiceForm: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">
-          {isEditing ? `Edit Invoice #${id}` : 'New Invoice'}
+          {isEditing ? `Edit Invoice ${invoiceNumber}` : 'New Invoice'}
         </h1>
         <div className="space-x-2">
           <Button variant="outline" onClick={() => handleSave(true)} disabled={loading}>

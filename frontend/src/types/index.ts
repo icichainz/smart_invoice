@@ -7,6 +7,17 @@ export interface User {
   last_name: string;
 }
 
+// Business profile (sender details printed on invoices)
+export interface BusinessProfile {
+  business_name: string;
+  address: string;
+  email: string;
+  phone: string;
+  tax_id: string;
+  payment_instructions: string;
+  footer_note: string;
+}
+
 // Client types
 export interface Client {
   id: number;
@@ -43,6 +54,7 @@ export interface InvoiceItemCreate {
 // Invoice types
 export interface Invoice {
   id: number;
+  number: string;
   client: number;
   client_name: string;
   user: number;
@@ -58,6 +70,7 @@ export interface Invoice {
   is_closed: boolean;
   share_link_id: string | null;
   sent: 'sent' | 'not sent';
+  sent_at: string | null;
   items: InvoiceItem[];
 }
 
@@ -82,6 +95,7 @@ export interface PublicInvoiceItem {
 
 export interface PublicInvoice {
   id: number;
+  number: string;
   created_at: string;
   due_date: string | null;
   status: 'paid' | 'unpaid';

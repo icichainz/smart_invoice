@@ -6,6 +6,7 @@ import {
   Menu,
   Receipt,
   Users,
+  Settings,
   Plus,
   LogOut,
   X,
@@ -34,6 +35,11 @@ const Layout: React.FC = () => {
       text: 'Clients',
       icon: Users,
       path: '/clients',
+    },
+    {
+      text: 'Settings',
+      icon: Settings,
+      path: '/settings',
     },
   ];
 

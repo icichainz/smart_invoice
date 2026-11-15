@@ -55,7 +55,7 @@ const SharedInvoice: React.FC = () => {
     try {
       setDownloading(true);
       const blob = await publicInvoiceApi.downloadPdf(shareId);
-      downloadBlob(blob, `invoice_${invoice.id}.pdf`);
+      downloadBlob(blob, `${invoice.number}.pdf`);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -87,7 +87,7 @@ const SharedInvoice: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="mx-auto max-w-4xl space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Invoice #{invoice.id}</h1>
+          <h1 className="text-3xl font-bold">Invoice {invoice.number}</h1>
           <Button onClick={handleDownload} disabled={downloading} className="flex items-center space-x-2">
             {downloading ? <Spinner size="sm" /> : <Download className="h-4 w-4" />}
             <span>Download PDF</span>

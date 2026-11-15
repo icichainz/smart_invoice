@@ -1,0 +1,15 @@
+{% autoescape off %}Hello {{ client_name }},
+{% if message %}
+{{ message }}
+{% endif %}
+Please find attached invoice {{ invoice.number }}.
+
+Amount due: ${{ invoice.total_amount_final }}{% if invoice.due_date %}
+Due date: {{ invoice.due_date|date:"F j, Y" }}{% endif %}
+
+You can view the invoice online at:
+{{ share_url }}
+
+Thank you,
+{{ sender_name }}
+{% endautoescape %}

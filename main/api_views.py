@@ -1,3 +1,6 @@
+import logging
+import smtplib
+
 from rest_framework import viewsets, status, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -5,20 +8,26 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
-from .models import Client, Invoice, InvoiceItem
+from .emails import send_invoice_email
+from .models import BusinessProfile, Client, Invoice, InvoiceItem
 from .pdf import build_invoice_pdf
 from .serializers import (
     ClientSerializer, InvoiceSerializer, InvoiceCreateSerializer,
     InvoiceItemSerializer, InvoiceItemCreateSerializer,
-    PublicInvoiceSerializer
+    PublicInvoiceSerializer, SendInvoiceEmailSerializer,
+    BusinessProfileSerializer
 )
+
+logger = logging.getLogger(__name__)
 
 
 def invoice_pdf_response(invoice):
     """Wrap a rendered invoice PDF in a downloadable HTTP response."""
     response = HttpResponse(build_invoice_pdf(invoice), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="invoice_{invoice.id}.pdf"'
+    filename = invoice.number or f'invoice_{invoice.id}'
+    response['Content-Disposition'] = f'attachment; filename="{filename}.pdf"'
     return response
 
 
@@ -42,8 +51,8 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'save_as_draft', 'is_closed', 'sent']
-    search_fields = ['client__name', 'client__email']
-    ordering_fields = ['created_at', 'due_date', 'total_amount_final']
+    search_fields = ['number', 'client__name', 'client__email']
+    ordering_fields = ['created_at', 'due_date', 'total_amount_final', 'sequence']
     ordering = ['-created_at']
 
     def get_queryset(self):
@@ -146,6 +155,47 @@ class InvoiceViewSet(viewsets.ModelViewSet):
             'data': serializer.data
         })
 
+    @action(detail=True, methods=['post'])
+    def send_email(self, request, pk=None):
+        """Email the invoice (PDF attached, plus share link) to its client"""
+        invoice = self.get_object()
+        payload = SendInvoiceEmailSerializer(data=request.data)
+        payload.is_valid(raise_exception=True)
+
+        problem = None
+        if invoice.save_as_draft:
+            problem = 'Draft invoices cannot be sent. Finalize the invoice first.'
+        elif invoice.client is None:
+            problem = 'Add a client to this invoice before sending it.'
+        elif not invoice.client.email:
+            problem = 'The client has no email address.'
+        elif not invoice.items.filter(is_active=True).exists():
+            problem = 'Add at least one item to this invoice before sending it.'
+        if problem:
+            return Response(
+                {'status': 'error', 'message': problem},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            send_invoice_email(invoice, message=payload.validated_data['message'])
+        except (smtplib.SMTPException, OSError):
+            logger.exception('Failed to email invoice %s', invoice.pk)
+            return Response(
+                {
+                    'status': 'error',
+                    'message': 'Could not send the email. Check the mail server settings.'
+                },
+                status=status.HTTP_502_BAD_GATEWAY
+            )
+
+        serializer = self.get_serializer(invoice)
+        return Response({
+            'status': 'success',
+            'message': f'Invoice emailed to {invoice.client.email}',
+            'data': serializer.data
+        })
+
     @action(detail=True, methods=['get'])
     def download_pdf(self, request, pk=None):
         """Download invoice as PDF"""
@@ -227,3 +277,12 @@ class PublicInvoicePdfView(APIView):
     def get(self, request, share_link_id):
         invoice = get_shared_invoice_or_404(share_link_id)
         return invoice_pdf_response(invoice)
+
+
+class BusinessProfileView(RetrieveUpdateAPIView):
+    """GET/PUT/PATCH the current user's business profile (created on first access)."""
+    serializer_class = BusinessProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return BusinessProfile.for_user(self.request.user)

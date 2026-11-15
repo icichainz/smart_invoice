@@ -10,6 +10,7 @@ import InvoiceForm from './pages/InvoiceForm';
 import ClientList from './pages/ClientList';
 import Login from './pages/Login';
 import SharedInvoice from './pages/SharedInvoice';
+import Settings from './pages/Settings';
 
 // Import components
 import Layout from './components/Layout';
@@ -33,6 +34,7 @@ function App() {
               <Route path="invoices/new" element={<InvoiceForm />} />
               <Route path="invoices/:id/edit" element={<InvoiceForm />} />
               <Route path="clients" element={<ClientList />} />
+              <Route path="settings" element={<Settings />} />
             </Route>
             
             {/* Fallback route */}
